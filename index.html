@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Company Directory</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="libs/css/style.css">
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    </head>
+    <body>
+
+       <div data-role="page" data-theme="a">
+
+            <div data-role="header">
+                
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#configPanel" class="ui-btn ui-btn-inline" data-icon="bars"></a></li>
+                        <li><a href="" class="ui-btn ui-btn-inline" data-icon="search" id="searchAreaBtn"></a></li>
+                        
+
+                    </ul>
+                </div>
+            </div>
+            
+
+            <div data-role="main" class="ui-content">
+                <div data-role ="article" class="ui-content" id="searchArea">
+                    <h3>Search Personnel</h3>
+                    <input type="text" name="text" id="searchName" placeholder="Search by Name">
+                    <input type="text" name="text" id="searchLocation" placeholder="Search by Location">
+                    <input type="text" name="text" id="searchDepartment" placeholder="Search by Department">
+                    
+                    
+                </div>
+                <ul data-role="listview" class="ui-content" id="entryList">
+                    <li ><a href="#employeePanel" ><span id="name0" class="entryName"></span> <span class="entrySubtitle" id="loc0"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name1" class="entryName"></span> <span class="entrySubtitle" id="loc1"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name2" class="entryName"></span> <span class="entrySubtitle" id="loc2"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name3" class="entryName"></span> <span class="entrySubtitle" id="loc3"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name4" class="entryName"></span> <span class="entrySubtitle" id="loc4"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name5" class="entryName"></span> <span class="entrySubtitle" id="loc5"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name6" class="entryName"></span> <span class="entrySubtitle" id="loc6"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name7" class="entryName"></span> <span class="entrySubtitle" id="loc7"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name8" class="entryName"></span> <span class="entrySubtitle" id="loc8"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name9" class="entryName"></span> <span class="entrySubtitle" id="loc9"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name10" class="entryName"></span> <span class="entrySubtitle" id="loc10"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name11" class="entryName"></span> <span class="entrySubtitle" id="loc11"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name12" class="entryName"></span> <span class="entrySubtitle" id="loc12"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name13" class="entryName"></span> <span class="entrySubtitle" id="loc13"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name14" class="entryName"></span> <span class="entrySubtitle" id="loc14"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name15" class="entryName"></span> <span class="entrySubtitle" id="loc15"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name16" class="entryName"></span> <span class="entrySubtitle" id="loc16"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name17" class="entryName"></span> <span class="entrySubtitle" id="loc17"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name18" class="entryName"></span> <span class="entrySubtitle" id="loc18"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name19" class="entryName"></span> <span class="entrySubtitle" id="loc19"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name20" class="entryName"></span> <span class="entrySubtitle" id="loc20"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name21" class="entryName"></span> <span class="entrySubtitle" id="loc21"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name22" class="entryName"></span> <span class="entrySubtitle" id="loc22"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name23" class="entryName"></span> <span class="entrySubtitle" id="loc23"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name24" class="entryName"></span> <span class="entrySubtitle" id="loc24"></span></a></li>
+                    <li ><a href="#employeePanel" ><span id="name25" class="entryName"></span> <span class="entrySubtitle" id="loc25"></span></a></li>
+                </ul>
+                
+            </div>
+
+            <div data-role="panel" id="configPanel">
+                <article id="menuArea">
+                      <h2>Menu</h2>
+                      <hr>
+                    <label for="sortBy"><h4>Sorting by:</h4></label>
+                    <select name="sortBy" id="sortBy">
+                        <option value="name">Name</option>
+                        <option value="location">Location</option>
+                        <option value="department">Department</option>
+                        
+                    </select>
+
+                    <label for="nameFormat"><h4>Name format:</h4></label>
+                    <select name="nameFormat" id="nameFormat">
+                        <option value ="lastFirst">Last, first</option>
+                        <option value="firstLast">First, last</option>
+                        
+                    </select>
+
+                    
+                    
+                    <hr>
+                    <div data-role="collapsible">
+                        <h3>Add personnel record</h3>
+                        <form action="" method="POST" id="addPersonnelForm">
+                            <label for="employeeFirstName">First Name: </label>
+                            <input type="text" name="employeeFirstName" id="addEmployeeFirstName" placeholder="Input first name" required>
+
+                            <label for="employeeSurname">Surname: </label>
+                            <input type="text" name="employeeSurname" id="addEmployeeSurname" placeholder="Input surname" required>
+
+                            
+                                <label for="addDepartmentID">Department ID: </label>
+                            <select id="addDepartmentID" name="departmentID">
+                                <option value="1" selected>1</option>
+
+                            </select>
+                            
+                            
+
+                            
+                            
+                            <label for="employeeEmail">Email Address: (optional) </label>
+                            <input type="email" name="employeeEmail" id="addEmployeeEmail" placeholder="Input email address">
+
+                            <br>                           
+                            <input type="submit" value="Submit">
+
+                        </form>
+                    </div>
+                     
+                     <div data-role="collapsible">
+                        <h3>Add department</h3>
+                        <form id= "addDepartmentForm" action="" method="POST">
+
+                            <label for="addDepartmentName">Department Name: </label>
+                            <input type="text" name="departmentName" id="addDepartmentName" placeholder="Input department name" required>
+
+                            <label for="addDepartmentNameLocation">Add to which location? </label>
+                            <div id="whichLocations">
+
+                            <input type="radio" name="location" id= "addDepartmentLoc0" value="" checked>
+                            <label for="addDepartmentLoc0" id="addDepLabel0"></label>
+
+                            <input type="radio" name="location" id= "addDepartmentLoc1" value="" checked>
+                            <label for="addDepartmentLoc1" id="addDepLabel1"></label> 
+
+                            <input type="radio" name="location" id= "addDepartmentLoc2" value="" checked>
+                            <label for="addDepartmentLoc2" id="addDepLabel2"></label> 
+
+                            <input type="radio" name="location" id= "addDepartmentLoc3" value="" checked>
+                            <label for="addDepartmentLoc3" id="addDepLabel3"></label>
+
+                            <input type="radio" name="location" id= "addDepartmentLoc4" value="" checked>
+                            <label for="addDepartmentLoc4" id="addDepLabel4"></label>
+
+                            <input type="radio" name="location" id= "addDepartmentLoc5" value="" checked>
+                            <label for="addDepartmentLoc5" id="addDepLabel5"></label>
+
+                            <input type="radio" name="location" id= "addDepartmentLoc6" value="" checked>
+                            <label for="addDepartmentLoc6" id="addDepLabel6"></label>
+
+                            <input type="radio" name="location" id= "addDepartmentLoc7" value="" checked>
+                            <label for="addDepartmentLoc7" id="addDepLabel7"></label>
+
+                            <input type="radio" name="location" id= "addDepartmentLoc8" value="" checked>
+                            <label for="addDepartmentLoc8" id="addDepLabel8"></label>
+
+                            <input type="radio" name="location" id= "addDepartmentLoc9" value="" checked>
+                            <label for="addDepartmentLoc9" id="addDepLabel9"></label>
+
+
+
+                            
+
+                            </div>
+                            <br>
+                            <input type="submit" value="Submit">
+
+                        </form>
+                    </div>
+                    
+                    <div data-role="collapsible">
+                        <h3>Add location</h3>
+                        <form action="" method="POST" id="addLocationForm">
+                            <label for="addLocationName">Location Name: </label>
+                            <input type="text" name="locationName" id="addLocationName" placeholder="Input location name" required>
+
+                            <br>
+                            <input type="submit" value="Submit">
+
+                        </form>
+                    </div>
+                    
+
+                    <hr>
+
+                    
+                    <div data-role="collapsible" data-collapsed-icon="edit" data-expanded-icon="carat-u">
+                        <h3>Edit department</h3>
+                        <form action="" method="POST" id="editDepartmentForm">
+                            <label for="chooseDep">Department: </label>
+                            <select id="chooseDep" name="chooseDep">
+                                <option value="1" selected>1</option>
+                            </select>
+                            <label for="newDepName">Edit department name:</label>
+                            <input type="text" id="newDepName" name="newDepName" placeholder="Input new department name" required>
+                            <label for="newLocID">Edit location ID:</label>
+                            <select id="newLocID" name="newLocID" placeholder="Input new location ID">
+                                <option value="1">1</option>
+                            </select>
+                            <br>
+
+                            <input type="submit" value="Submit">
+                        </form>
+                    </div>
+
+                    <div data-role="collapsible" data-collapsed-icon="edit" data-expanded-icon="carat-u">
+                        <h3>Edit location</h3>
+                        <form action="" method="POST" id="editLocationForm">
+                            <label for="chooseLoc">Location: </label>
+                            <select id="chooseLoc" name="chooseLoc">
+                                <option value="1">1</option>
+                            </select>
+                            <label for="newLocName">Edit location name: </label>
+                            <input type="text" id="newLocName" name="newLocName" placeholder="Input new location name" required>
+                            <br>
+
+                            <input type="submit" value="Submit">
+                        </form>
+                    </div>
+                    
+
+
+
+                    <hr>
+
+
+                    <div data-role="collapsible" data-collapsed-icon="delete" data-expanded-icon="carat-u">
+                        <h3>Delete department</h3>
+                        <form action="" method="POST" id="deleteDepartmentForm">
+                            <label for="chooseDepToDel">Department to delete: </label>
+                            <select id="chooseDepToDel" name="chooseDepToDel">
+                                <option value="1">1</option>
+                            </select>
+                            
+
+                            <input type="submit" value="Delete department">
+                        </form>
+                    </div>
+                    
+
+                    <div data-role="collapsible" data-collapsed-icon="delete" data-expanded-icon="carat-u">
+                        <h3>Delete location</h3>
+                        <form action="" method="POST" id="deleteLocationForm">
+                            <label for="chooseLocToDel">Location to delete: </label>
+                            <select id="chooseLocToDel" name="chooseLocToDel">
+                                <option value="1">1</option>
+                            </select>
+                            
+
+                            <input type="submit" value="Delete location">
+                        </form>
+                    </div>
+
+                
+                    
+                
+                </article>
+                
+
+            </div>
+
+            <div data-role="panel" id="employeePanel" data-position="right">
+                <article id="employeeArea">
+                    <h3 id="employeePanelName"></h3>
+                    <ul data-role="listview">
+                        <li >Location: <span id="employeePanelLocation"></span></li>
+                        <li >Department: <span id="employeePanelDepartment"></span></li>
+                        <li>Personnel ID: <span id="personnelID"></span></li>
+                        <li> <span id="employeePanelEmail"></span></li>
+                    </ul>
+
+                    <div data-role="collapsible" data-collapsed-icon="edit" data-expanded-icon="carat-u">
+                        <h3>Edit entry</h3>
+                        <form action="" method="POST" id="editPersonnelForm">
+                            
+                            <label for="newFName">Edit first name:</label>
+                            <input type="text" id="newFName" name="newFName" placeholder="Input new first name" required>
+                            <label for="newLName">Edit surname:</label>
+                            <input type="text" id="newLName" name="newLName" placeholder="Input new surname">
+                            <label for="newEmail">Edit email:</label>
+                            <input type="email" id="newEmail" name="newEmail" placeholder="Input new email address">
+                            <label for="newDepID">Edit department ID:</label>
+                            <select id="newDepID" name="newDepID" placeholder="Input new department ID">
+                                <option value="1">1</option>
+                            </select>
+                            <br>
+
+                            <input type="submit" value="Submit">
+                        </form>
+                    </div>
+
+                    
+                            
+                    <div data-role="collapsible" data-collapsed-icon="delete" data-expanded-icon="carat-u">
+                        <h3>Delete entry</h3>
+                        <form action="" method="GET" id="deletePersonnelForm">
+                            <label for="deletePersonnel">Are you sure?</label>
+                            <input type="submit" value="Delete entry" name="deletePersonnel" id="deletePersonnel">
+                        </form>
+                    </div>
+                        
+                        
+                    
+                    
+
+                    
+                </article>
+                
+
+            </div>
+
+            
+
+            <div data-role="footer">
+                <div data-role="navbar">
+                    <ul id="footerUl">
+                        <li><button data-icon="carat-l" class="footerBtn" id="pageLeftBtn"></button></li>
+                        <li id="pageNumberDisplay"></li>
+                        <li><button data-icon="carat-r" class="footerBtn" id="pageRightBtn"></button></li>
+
+                    </ul>
+                </div>
+
+
+
+                 
+            </div>
+
+
+        </div>
+
+        <script src="libs/js/script.js"></script>
+        
+    </body>
+</html>

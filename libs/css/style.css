@@ -1,0 +1,40 @@
+#searchArea {
+    display: none;
+    padding-top: 0;
+}
+
+.entrySubtitle {
+    font-size: 0.7em;
+    color: rgba(0, 0, 0, 0.6);
+    padding: 0 5%;
+    float: right;
+}
+
+hr {
+    margin: 10% 0;
+    
+}
+
+#pageNumberDisplay {
+    text-align: center;
+    margin-top: 2%;
+
+}
+
+#employeeArea li {
+    font-weight: bold;
+    height: auto;
+}
+
+#employeeArea li span {
+    font-weight: normal; 
+    font-size: 0.8em;
+}
+
+#addDepartmentID {
+    height: 50px;
+}
+
+.redBtn {
+    background: rgb(243, 24, 24) !important;
+}
