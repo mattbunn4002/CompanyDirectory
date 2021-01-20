@@ -15,11 +15,6 @@ hr {
     
 }
 
-#pageNumberDisplay {
-    text-align: center;
-    margin-top: 2%;
-
-}
 
 #employeeArea li {
     font-weight: bold;
@@ -35,6 +30,13 @@ hr {
     height: 50px;
 }
 
-.redBtn {
-    background: rgb(243, 24, 24) !important;
+.failAlert { 
+    color: red;
+    font-weight: bold;
 }
+
+
+* {
+    text-shadow: none;
+}
+

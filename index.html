@@ -8,15 +8,18 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="libs/css/style.css">
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
-        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <link rel="stylesheet" href="libs/css/jquery.mobile-1.4.5.min.css" />
+        <link rel="stylesheet" href="libs/css/Themes/testBlueTheme.css" />
+        <link rel="stylesheet" href="libs/css/Themes/jquery.mobile.icons.min.css" />
+        <link rel="shortcut icon" href="libs\css\images\favicon.ico" type="image/x-icon" />
+        
+        
     </head>
     <body>
 
-       <div data-role="page" data-theme="a">
+       <div data-role="page" >
 
-            <div data-role="header">
+            <div data-role="header" data-position="fixed" id="header">
                 
                 <div data-role="navbar">
                     <ul>
@@ -29,8 +32,8 @@
             </div>
             
 
-            <div data-role="main" class="ui-content">
-                <div data-role ="article" class="ui-content" id="searchArea">
+            <div data-role="main" class="ui-content" id="mainContent" >
+                <div data-role ="article" class="ui-content" id="searchArea" >
                     <h3>Search Personnel</h3>
                     <input type="text" name="text" id="searchName" placeholder="Search by Name">
                     <input type="text" name="text" id="searchLocation" placeholder="Search by Location">
@@ -38,38 +41,15 @@
                     
                     
                 </div>
-                <ul data-role="listview" class="ui-content" id="entryList">
-                    <li ><a href="#employeePanel" ><span id="name0" class="entryName"></span> <span class="entrySubtitle" id="loc0"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name1" class="entryName"></span> <span class="entrySubtitle" id="loc1"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name2" class="entryName"></span> <span class="entrySubtitle" id="loc2"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name3" class="entryName"></span> <span class="entrySubtitle" id="loc3"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name4" class="entryName"></span> <span class="entrySubtitle" id="loc4"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name5" class="entryName"></span> <span class="entrySubtitle" id="loc5"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name6" class="entryName"></span> <span class="entrySubtitle" id="loc6"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name7" class="entryName"></span> <span class="entrySubtitle" id="loc7"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name8" class="entryName"></span> <span class="entrySubtitle" id="loc8"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name9" class="entryName"></span> <span class="entrySubtitle" id="loc9"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name10" class="entryName"></span> <span class="entrySubtitle" id="loc10"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name11" class="entryName"></span> <span class="entrySubtitle" id="loc11"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name12" class="entryName"></span> <span class="entrySubtitle" id="loc12"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name13" class="entryName"></span> <span class="entrySubtitle" id="loc13"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name14" class="entryName"></span> <span class="entrySubtitle" id="loc14"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name15" class="entryName"></span> <span class="entrySubtitle" id="loc15"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name16" class="entryName"></span> <span class="entrySubtitle" id="loc16"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name17" class="entryName"></span> <span class="entrySubtitle" id="loc17"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name18" class="entryName"></span> <span class="entrySubtitle" id="loc18"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name19" class="entryName"></span> <span class="entrySubtitle" id="loc19"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name20" class="entryName"></span> <span class="entrySubtitle" id="loc20"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name21" class="entryName"></span> <span class="entrySubtitle" id="loc21"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name22" class="entryName"></span> <span class="entrySubtitle" id="loc22"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name23" class="entryName"></span> <span class="entrySubtitle" id="loc23"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name24" class="entryName"></span> <span class="entrySubtitle" id="loc24"></span></a></li>
-                    <li ><a href="#employeePanel" ><span id="name25" class="entryName"></span> <span class="entrySubtitle" id="loc25"></span></a></li>
+                <ul data-role="listview" class="ui-content" id="entryList" data-theme="b">
+                    
+                    
+                    
                 </ul>
                 
             </div>
 
-            <div data-role="panel" id="configPanel">
+            <div data-role="panel" id="configPanel" >
                 <article id="menuArea">
                       <h2>Menu</h2>
                       <hr>
@@ -92,7 +72,7 @@
                     
                     <hr>
                     <div data-role="collapsible">
-                        <h3>Add personnel record</h3>
+                        <h3>Add personnel</h3>
                         <form action="" method="POST" id="addPersonnelForm">
                             <label for="employeeFirstName">First Name: </label>
                             <input type="text" name="employeeFirstName" id="addEmployeeFirstName" placeholder="Input first name" required>
@@ -101,9 +81,9 @@
                             <input type="text" name="employeeSurname" id="addEmployeeSurname" placeholder="Input surname" required>
 
                             
-                                <label for="addDepartmentID">Department ID: </label>
+                                <label for="addDepartmentID">Department: </label>
                             <select id="addDepartmentID" name="departmentID">
-                                <option value="1" selected>1</option>
+                                
 
                             </select>
                             
@@ -118,6 +98,8 @@
                             <input type="submit" value="Submit">
 
                         </form>
+                        
+                        
                     </div>
                      
                      <div data-role="collapsible">
@@ -192,13 +174,13 @@
                         <form action="" method="POST" id="editDepartmentForm">
                             <label for="chooseDep">Department: </label>
                             <select id="chooseDep" name="chooseDep">
-                                <option value="1" selected>1</option>
+                                
                             </select>
                             <label for="newDepName">Edit department name:</label>
                             <input type="text" id="newDepName" name="newDepName" placeholder="Input new department name" required>
-                            <label for="newLocID">Edit location ID:</label>
-                            <select id="newLocID" name="newLocID" placeholder="Input new location ID">
-                                <option value="1">1</option>
+                            <label for="newLocID">Edit location:</label>
+                            <select id="newLocID" name="newLocID" placeholder="Input new location">
+                                
                             </select>
                             <br>
 
@@ -211,7 +193,7 @@
                         <form action="" method="POST" id="editLocationForm">
                             <label for="chooseLoc">Location: </label>
                             <select id="chooseLoc" name="chooseLoc">
-                                <option value="1">1</option>
+                                
                             </select>
                             <label for="newLocName">Edit location name: </label>
                             <input type="text" id="newLocName" name="newLocName" placeholder="Input new location name" required>
@@ -232,12 +214,13 @@
                         <form action="" method="POST" id="deleteDepartmentForm">
                             <label for="chooseDepToDel">Department to delete: </label>
                             <select id="chooseDepToDel" name="chooseDepToDel">
-                                <option value="1">1</option>
+                                
                             </select>
                             
 
                             <input type="submit" value="Delete department">
                         </form>
+                        <p class="failAlert" id="deleteDepartmentFailAlert"></p>
                     </div>
                     
 
@@ -246,12 +229,13 @@
                         <form action="" method="POST" id="deleteLocationForm">
                             <label for="chooseLocToDel">Location to delete: </label>
                             <select id="chooseLocToDel" name="chooseLocToDel">
-                                <option value="1">1</option>
+                                
                             </select>
                             
 
                             <input type="submit" value="Delete location">
                         </form>
+                        <p class="failAlert" id="deleteLocationFailAlert"></p>
                     </div>
 
                 
@@ -262,10 +246,10 @@
 
             </div>
 
-            <div data-role="panel" id="employeePanel" data-position="right">
+            <div data-role="panel" id="employeePanel" data-position="right" >
                 <article id="employeeArea">
                     <h3 id="employeePanelName"></h3>
-                    <ul data-role="listview">
+                    <ul data-role="listview" id="employeeInfo">
                         <li >Location: <span id="employeePanelLocation"></span></li>
                         <li >Department: <span id="employeePanelDepartment"></span></li>
                         <li>Personnel ID: <span id="personnelID"></span></li>
@@ -314,16 +298,9 @@
 
             
 
-            <div data-role="footer">
-                <div data-role="navbar">
-                    <ul id="footerUl">
-                        <li><button data-icon="carat-l" class="footerBtn" id="pageLeftBtn"></button></li>
-                        <li id="pageNumberDisplay"></li>
-                        <li><button data-icon="carat-r" class="footerBtn" id="pageRightBtn"></button></li>
-
-                    </ul>
-                </div>
-
+            <div data-role="footer" >
+                
+                <h4>&copy; 2021</h4>
 
 
                  
@@ -332,6 +309,8 @@
 
         </div>
 
+        <script src="libs/js/jquery-2.2.3.min.js"></script>
+        <script src="libs/js/jquery.mobile-1.4.5.min.js"></script>
         <script src="libs/js/script.js"></script>
         
     </body>

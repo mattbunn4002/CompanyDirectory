@@ -5,7 +5,9 @@ let subtitleType;
 let visibleEntries = [];
 let departments;
 let locations;
+let clickEventsBound = false;
 
+$('#entryList').addClass('ui-alt-icon');
 
 $("#searchAreaBtn").on("click", () => {
     $("#searchArea").slideToggle(200);
@@ -205,65 +207,66 @@ $("#sortBy").on("change", (e) => {
     sortEntries();
 })
 
-for (let i=0; i < 26; i++) {
-    $("#name" + i).closest("li").on("click", (e) => {
-        
-        let targetNameID = $(e.target).closest("li").find("span").attr("id"); //returns nameID eg "name3" 
-        let index = parseInt(targetNameID.substring(4)) + ((pageNumber-1) * 26); //gets index of clicked entry in allEntries["data"] array
-        
-        $("#employeePanelName").html(visibleEntries[index]["firstName"] + " " + visibleEntries[index]["lastName"]);
-        $("#employeePanelLocation").html(visibleEntries[index]["location"]);
-        $("#employeePanelDepartment").html(visibleEntries[index]["department"]);
-        $("#employeePanelEmail").html(visibleEntries[index]["email"]);
-        $("#personnelID").html(visibleEntries[index]["id"]);
-        $("#newFName").attr("value", visibleEntries[index]["firstName"]);
-        $("#newLName").attr("value", visibleEntries[index]["lastName"]);
-        $("#newEmail").attr("value", visibleEntries[index]["email"]);
-        
-    })
-}
 
 
-function updatePersonnelEntries() { //Need to add if statement checking whether format chosen by user is lName,fName or fName,lName.
-    let start = 0 + (pageNumber - 1)*26;
-    let end = 26 + (pageNumber - 1)*26;
-    let format = "firstLast";
+
+
+
+function updatePersonnelEntries() {
+    $("#entryList").html("");
+    let format="firstLast";
     if ($("#nameFormat").val() == "lastFirst") {
         format = "lastFirst";
     }
-    for (let i = start; i < end; i++) {
-        let nameID = "name" + (i%26);
-        let locID = "loc" + (i%26);
+    for (let i=0; i < visibleEntries.length; i++) {
         
-        if (!visibleEntries[i]) {  
-            $("#" + nameID).html("");
-            $("#" + locID).html("");
-            $("#" + nameID).parent().css("display", "none"); //Removes entries with no content.
-            continue;
-        } 
-
-        $("#" + nameID).parent().css("display", "list-item"); //Sets display of all list items to default in case they were set to none previously.
-
         if (subtitleType != "department") {
+            
             if (format == "lastFirst") {
-                $("#" + nameID).html(visibleEntries[i]["lastName"] + ", " + visibleEntries[i]["firstName"]);
-                $("#" + locID).html(visibleEntries[i]["location"]);
+                
+                $("#entryList").append("<li><a href='#employeePanel'><span id='name" + i + "' class='entryName'>" + visibleEntries[i]["lastName"] + ", " + visibleEntries[i]["firstName"] + "</span> <span class='entrySubtitle' id='loc" + i + "'>" + visibleEntries[i]["location"] +"</span></a></li>").listview();
             } else {
-                $("#" + nameID).html(visibleEntries[i]["firstName"] + " " + visibleEntries[i]["lastName"]);
-                $("#" + locID).html(visibleEntries[i]["location"]);
+                $("#entryList").append("<li><a href='#employeePanel'><span id='name" + i + "' class='entryName'>" + visibleEntries[i]["firstName"] + " " + visibleEntries[i]["lastName"] + "</span> <span class='entrySubtitle' id='loc" + i + "'>" + visibleEntries[i]["location"] +"</span></a></li>");
+                
             }
         } 
         else if (subtitleType == "department") {  //Puts the department as the entry subtitles if subtitleType == "department"
             if (format == "lastFirst") {
-                $("#" + nameID).html(visibleEntries[i]["lastName"] + ", " + visibleEntries[i]["firstName"]);
-                $("#" + locID).html(visibleEntries[i]["department"]);
+                $("#entryList").append("<li><a href='#employeePanel'><span id='name" + i + "' class='entryName'>" + visibleEntries[i]["lastName"] + ", " + visibleEntries[i]["firstName"] + "</span> <span class='entrySubtitle' id='loc" + i + "'>" + visibleEntries[i]["department"] +"</span></a></li>");
             } else {
-                $("#" + nameID).html(visibleEntries[i]["firstName"] + " " + visibleEntries[i]["lastName"]);
-                $("#" + locID).html(visibleEntries[i]["department"]);
+                $("#entryList").append("<li><a href='#employeePanel'><span id='name" + i + "' class='entryName'>" + visibleEntries[i]["firstName"] + " " + visibleEntries[i]["lastName"] + "</span> <span class='entrySubtitle' id='loc" + i + "'>" + visibleEntries[i]["department"] +"</span></a></li>");
             }
         }
+
     }
+    $("#entryList").listview("refresh");
+
+
+    if (clickEventsBound == false) {
+        
+        for (let i=0; i < visibleEntries.length; i++) {
+            
+            $("#name" + i).closest("li").on("click", (e) => {
+                
+                let targetNameID = $(e.target).closest("li").find("span").attr("id"); //returns nameID eg "name3" 
+                let index = parseInt(targetNameID.substring(4)); 
+                console.log(index);
+                $("#employeePanelName").html(visibleEntries[index]["firstName"] + " " + visibleEntries[index]["lastName"]);
+                $("#employeePanelLocation").html(visibleEntries[index]["location"]);
+                $("#employeePanelDepartment").html(visibleEntries[index]["department"]);
+                $("#employeePanelEmail").html(visibleEntries[index]["email"]);
+                $("#personnelID").html(visibleEntries[index]["id"]);
+                $("#newFName").attr("value", visibleEntries[index]["firstName"]);
+                $("#newLName").attr("value", visibleEntries[index]["lastName"]);
+                $("#newEmail").attr("value", visibleEntries[index]["email"]);
+                
+            })
+        }
+        clickEventsBound == true;
+    }
+    
 }
+
 
 
 
@@ -314,14 +317,18 @@ $(document).ready( () => {  //On page load:  Need to add code that puts all deps
                 let addDepartmentHTML = "";
                 
                 for (let i=0; i < result["data"].length; i++) {
-                    currentHTML = "<option value=" + "'" + result["data"][i]["id"] + "'" + ">" + result["data"][i]["id"] + " (" + result["data"][i]["name"] + ")" + "</option>";
+                    currentHTML = "<option value=" + "'" + result["data"][i]["id"] + "'" + ">" +  result["data"][i]["name"] + "</option>";
                     addDepartmentHTML += currentHTML;
                 }
                 
                 $("#addDepartmentID").html(addDepartmentHTML);
+                $("#addDepartmentID").selectmenu("refresh");
                 $("#chooseDep").html(addDepartmentHTML);
+                $("#chooseDep").selectmenu("refresh");
                 $("#chooseDepToDel").html(addDepartmentHTML);
+                $("#chooseDepToDel").selectmenu("refresh");
                 $("#newDepID").html(addDepartmentHTML);
+                $("#newDepID").selectmenu("refresh");
             }
             
         },
@@ -356,13 +363,16 @@ $(document).ready( () => {  //On page load:  Need to add code that puts all deps
                 let addLocationHTML = "";
                 
                 for (let i=0; i < locations.length; i++) {
-                    currentHTML = "<option value=" + "'" + result["data"][i]["id"] + "'" + ">" + result["data"][i]["id"] + " (" + result["data"][i]["name"] + ")" + "</option>";
+                    currentHTML = "<option value=" + "'" + result["data"][i]["id"] + "'" + ">" + result["data"][i]["name"] + "</option>";
                     addLocationHTML += currentHTML;
                 }
                 
                 $("#newLocID").html(addLocationHTML);
+                $("#newLocID").selectmenu("refresh");
                 $("#chooseLoc").html(addLocationHTML);
+                $("#chooseLoc").selectmenu("refresh");
                 $("#chooseLocToDel").html(addLocationHTML);
+                $("#chooseLocToDel").selectmenu("refresh");
                 
 
 
@@ -379,6 +389,11 @@ $(document).ready( () => {  //On page load:  Need to add code that puts all deps
 });
 
 
+
+
+
+
+
 $('#addDepartmentForm').submit(function(e){    //Runs insertDepartment.php when the form is submitted without navigating to it.
         e.preventDefault();
         $.ajax({
@@ -387,7 +402,7 @@ $('#addDepartmentForm').submit(function(e){    //Runs insertDepartment.php when 
             data: $('#addDepartmentForm').serialize(),
             success:function(result){
                 if (result["status"]["name"] == "ok") {
-                    alert("Department added successfully");
+                    
                     location.reload();
                 }
             },
@@ -406,7 +421,7 @@ $('#addPersonnelForm').submit(function(e){
         data: $('#addPersonnelForm').serialize(),
         success:function(result){
             if (result["status"]["name"] == "ok") {
-                alert("Personnel entry added successfully");
+                
                 location.reload();
             }
         },
@@ -424,7 +439,7 @@ $('#addLocationForm').submit(function(e){
         data: $('#addLocationForm').serialize(),
         success: function(result) {
             if (result["status"]["name"] == "ok") {
-                alert("Location added successfully");
+                
                 location.reload();
             }
         },
@@ -443,7 +458,7 @@ $("#editDepartmentForm").submit(function(e){
         success: function(result) {
             
             if (result["status"]["name"] == "ok") {
-                alert("Department edited successfully");
+                
                 location.reload();
             }
         },
@@ -462,7 +477,7 @@ $("#editLocationForm").submit(function(e){
         success: function(result) {
             
             if (result["status"]["name"] == "ok") {
-                alert("Location edited successfully");
+                
                 location.reload();
             }
         },
@@ -476,7 +491,8 @@ $("#deleteDepartmentForm").submit(function(e) {
     e.preventDefault();
     
     if (departmentHasDependencies($("#chooseDepToDel").val())) {   //Prevents deletion if the department has dependencies.
-        alert("Unable to delete: Department has dependencies");
+        $("#deleteDepartmentFailAlert").html("Unable to delete: Department has dependencies");
+        
         return;
     }
 
@@ -490,7 +506,7 @@ $("#deleteDepartmentForm").submit(function(e) {
         success: function(result) {
             console.log(result);
             if (result["status"]["name"] == "ok") {
-                alert("Department deleted successfully");
+                $("#deleteDepartmentFailAlert").html("");
                 location.reload();
             }
         },
@@ -505,7 +521,7 @@ $("#deleteLocationForm").submit(function(e) {
     e.preventDefault();
 
     if (locationHasDependencies($("#chooseLocToDel").val())) {
-        alert("Unable to delete: Location has dependencies");
+        $("#deleteLocationFailAlert").html("Unable to delete: Location has dependencies");
         return;
     }
 
@@ -517,7 +533,7 @@ $("#deleteLocationForm").submit(function(e) {
         success: function(result) {
             
             if (result["status"]["name"] == "ok") {
-                alert("Location deleted successfully");
+                $("#deleteLocationFailAlert").html("");
                 location.reload();
             }
         },
@@ -544,7 +560,7 @@ $("#editPersonnelForm").submit(function(e) {
         success: function(result) {
             
             if (result["status"]["name"] == "ok") {
-                alert("Personnel edited successfully");
+                
                 location.reload();
             }
                
@@ -568,7 +584,6 @@ $("#deletePersonnelForm").submit(function(e) {
         success: function(result) {
             console.log(result);
             if (result["status"]["name"] == "ok") {
-                alert("Personnel deleted successfully");
                 location.reload();
             }
                
