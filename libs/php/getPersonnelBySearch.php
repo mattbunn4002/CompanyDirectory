@@ -32,7 +32,8 @@
 
 	}	
 
-	$query = 'SELECT p.id, d.id, p.lastName, p.firstName, p.jobTitle, p.email, d.name as department, l.name as location FROM personnel p LEFT JOIN department d ON (d.id = p.departmentID) LEFT JOIN location l ON (l.id = d.locationID) ORDER BY p.lastName, p.firstName, d.name, l.name';
+    $query = 'SELECT p.id, p.lastName, p.firstName, p.departmentID, p.jobTitle, p.email, d.name as department, l.name as location FROM personnel p LEFT JOIN department d ON (d.id = p.departmentID) LEFT JOIN location l ON (l.id = d.locationID) WHERE (p.firstName LIKE "%' . $_REQUEST["nameSearchQuery"] . '%" OR p.lastName LIKE "%' . $_REQUEST["nameSearchQuery"] . '%" ) AND d.name LIKE "%' . $_REQUEST["depSearchQuery"] . '%" AND l.name LIKE "%' . $_REQUEST["locSearchQuery"] . '%" ORDER BY p.lastName, p.firstName, d.name, l.name';
+    
 
 	$result = $conn->query($query);
 	
@@ -41,7 +42,7 @@
 		$output['status']['code'] = "400";
 		$output['status']['name'] = "executed";
 		$output['status']['description'] = "query failed";	
-		$output['data'] = [];
+		$output['data'] = [$query];
 
 		mysqli_close($conn);
 

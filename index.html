@@ -7,8 +7,8 @@
         <title>Company Directory</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="libs/css/style.css">
         <link rel="stylesheet" href="libs/css/jquery.mobile-1.4.5.min.css" />
+        <link rel="stylesheet" href="libs/css/style.css">
         <link rel="stylesheet" href="libs/css/Themes/testBlueTheme.css" />
         <link rel="stylesheet" href="libs/css/Themes/jquery.mobile.icons.min.css" />
         <link rel="shortcut icon" href="libs\css\images\favicon.ico" type="image/x-icon" />
@@ -23,7 +23,8 @@
                 
                 <div data-role="navbar">
                     <ul>
-                        <li><a href="#configPanel" class="ui-btn ui-btn-inline" data-icon="bars"></a></li>
+                        <li><a href="#configPanel" class="ui-btn ui-btn-inline" data-icon="bars" ></a></li>
+                        
                         <li><a href="" class="ui-btn ui-btn-inline" data-icon="search" id="searchAreaBtn"></a></li>
                         
 
@@ -32,16 +33,25 @@
             </div>
             
 
-            <div data-role="main" class="ui-content" id="mainContent" >
+            <div data-role="main" class="ui-content" id="mainContent"  >
                 <div data-role ="article" class="ui-content" id="searchArea" >
                     <h3>Search Personnel</h3>
                     <input type="text" name="text" id="searchName" placeholder="Search by Name">
-                    <input type="text" name="text" id="searchLocation" placeholder="Search by Location">
-                    <input type="text" name="text" id="searchDepartment" placeholder="Search by Department">
+                    
+                    <label for="chooseSearchLoc" id="searchLocationLabel">Location:</label>
+                    <select name="chooseSearchLoc" id="chooseSearchLoc">
+                        
+                    </select>
+                    
+                    <label for="chooseSearchDep" id="searchDepartmentLabel">Department:</label>
+                    <select name="chooseSearchDep" id="chooseSearchDep">
+
+                    </select>
+                    <br>
                     
                     
                 </div>
-                <ul data-role="listview" class="ui-content" id="entryList" data-theme="b">
+                <ul data-role="listview" class="ui-content" id="entryList" data-theme="c">
                     
                     
                     
@@ -51,7 +61,7 @@
 
             <div data-role="panel" id="configPanel" >
                 <article id="menuArea">
-                      <h2>Menu</h2>
+                      <h2>Company Directory</h2>
                       <hr>
                     <label for="sortBy"><h4>Sorting by:</h4></label>
                     <select name="sortBy" id="sortBy">
@@ -64,7 +74,7 @@
                     <label for="nameFormat"><h4>Name format:</h4></label>
                     <select name="nameFormat" id="nameFormat">
                         <option value ="lastFirst">Last, first</option>
-                        <option value="firstLast">First, last</option>
+                        <option value="firstLast" selected="selected">First, last</option>
                         
                     </select>
 
@@ -109,44 +119,9 @@
                             <label for="addDepartmentName">Department Name: </label>
                             <input type="text" name="departmentName" id="addDepartmentName" placeholder="Input department name" required>
 
-                            <label for="addDepartmentNameLocation">Add to which location? </label>
-                            <div id="whichLocations">
+                            <label for="addDepChooseLoc">Location to add to: </label>
+                            <select id="addDepChooseLoc" name="addDepChooseLoc">
 
-                            <input type="radio" name="location" id= "addDepartmentLoc0" value="" checked>
-                            <label for="addDepartmentLoc0" id="addDepLabel0"></label>
-
-                            <input type="radio" name="location" id= "addDepartmentLoc1" value="" checked>
-                            <label for="addDepartmentLoc1" id="addDepLabel1"></label> 
-
-                            <input type="radio" name="location" id= "addDepartmentLoc2" value="" checked>
-                            <label for="addDepartmentLoc2" id="addDepLabel2"></label> 
-
-                            <input type="radio" name="location" id= "addDepartmentLoc3" value="" checked>
-                            <label for="addDepartmentLoc3" id="addDepLabel3"></label>
-
-                            <input type="radio" name="location" id= "addDepartmentLoc4" value="" checked>
-                            <label for="addDepartmentLoc4" id="addDepLabel4"></label>
-
-                            <input type="radio" name="location" id= "addDepartmentLoc5" value="" checked>
-                            <label for="addDepartmentLoc5" id="addDepLabel5"></label>
-
-                            <input type="radio" name="location" id= "addDepartmentLoc6" value="" checked>
-                            <label for="addDepartmentLoc6" id="addDepLabel6"></label>
-
-                            <input type="radio" name="location" id= "addDepartmentLoc7" value="" checked>
-                            <label for="addDepartmentLoc7" id="addDepLabel7"></label>
-
-                            <input type="radio" name="location" id= "addDepartmentLoc8" value="" checked>
-                            <label for="addDepartmentLoc8" id="addDepLabel8"></label>
-
-                            <input type="radio" name="location" id= "addDepartmentLoc9" value="" checked>
-                            <label for="addDepartmentLoc9" id="addDepLabel9"></label>
-
-
-
-                            
-
-                            </div>
                             <br>
                             <input type="submit" value="Submit">
 
@@ -248,34 +223,33 @@
 
             <div data-role="panel" id="employeePanel" data-position="right" >
                 <article id="employeeArea">
-                    <h3 id="employeePanelName"></h3>
+                    <h3 id="employeePanelName" personnelID=""></h3>
                     <ul data-role="listview" id="employeeInfo">
-                        <li >Location: <span id="employeePanelLocation"></span></li>
                         <li >Department: <span id="employeePanelDepartment"></span></li>
-                        <li>Personnel ID: <span id="personnelID"></span></li>
-                        <li> <span id="employeePanelEmail"></span></li>
+                        <li >Location: <span id="employeePanelLocation"></span></li>
+                        <li>Email:  <span id="employeePanelEmail"></span></li>
                     </ul>
-
+                    <br>
                     <div data-role="collapsible" data-collapsed-icon="edit" data-expanded-icon="carat-u">
                         <h3>Edit entry</h3>
                         <form action="" method="POST" id="editPersonnelForm">
                             
-                            <label for="newFName">Edit first name:</label>
+                            <label for="newFName">First name:</label>
                             <input type="text" id="newFName" name="newFName" placeholder="Input new first name" required>
-                            <label for="newLName">Edit surname:</label>
+                            <label for="newLName">Surname:</label>
                             <input type="text" id="newLName" name="newLName" placeholder="Input new surname">
-                            <label for="newEmail">Edit email:</label>
+                            <label for="newEmail">Email Address:</label>
                             <input type="email" id="newEmail" name="newEmail" placeholder="Input new email address">
-                            <label for="newDepID">Edit department ID:</label>
-                            <select id="newDepID" name="newDepID" placeholder="Input new department ID">
-                                <option value="1">1</option>
+                            <label for="editPersonnelNewDep">Department:</label>
+                            <select id="editPersonnelNewDep" name="editPersonnelNewDep" placeholder="Input new department">
+                                
                             </select>
                             <br>
 
                             <input type="submit" value="Submit">
                         </form>
                     </div>
-
+                   
                     
                             
                     <div data-role="collapsible" data-collapsed-icon="delete" data-expanded-icon="carat-u">

@@ -1,11 +1,7 @@
-let pageNumber;
-let allEntries;
 let sortType;
-let subtitleType;
-let visibleEntries = [];
-let departments;
-let locations;
-let clickEventsBound = false;
+let nameSearchQuery = "";
+let depSearchQuery = "";
+let locSearchQuery = "";
 
 $('#entryList').addClass('ui-alt-icon');
 
@@ -14,15 +10,18 @@ $("#searchAreaBtn").on("click", () => {
 });
 
 $("#searchName").on("input", () => {
-    searchFilter($("#searchName").val().toLowerCase(), $("#searchLocation").val().toLowerCase(), $("#searchDepartment").val().toLowerCase());
+    nameSearchQuery = $("#searchName").val().toLowerCase();
+    updatePersonnelEntries();
 });
 
-$("#searchLocation").on("input", () => {
-    searchFilter($("#searchName").val().toLowerCase(), $("#searchLocation").val().toLowerCase(), $("#searchDepartment").val().toLowerCase());
+$("#chooseSearchLoc").on("change", () => {
+    locSearchQuery = $("#chooseSearchLoc").val().toLowerCase();
+    updatePersonnelEntries();
 });
 
-$("#searchDepartment").on("input", () => {
-    searchFilter($("#searchName").val().toLowerCase(), $("#searchLocation").val().toLowerCase(), $("#searchDepartment").val().toLowerCase());
+$("#chooseSearchDep").on("change", () => {
+    depSearchQuery = $("#chooseSearchDep").val().toLowerCase();
+    updatePersonnelEntries();
 });
 
 function getDepByID(depID) {
@@ -76,267 +75,305 @@ function getLocByID(locID) {
 
 function departmentHasDependencies(depID) {
     
-    let departmentName = getDepByID(depID);
-    
-    let response = false;
-    allEntries["data"].forEach((entry) => {
-        
-        if (entry["department"] == departmentName) {
-            response = true;
+    let hasDependencies;
+    $.ajax({            
+        url: "libs/php/getDepartmentDependencies.php",
+        type: "GET",
+        dataType: "json",
+        async: false,
+        data: {
+            departmentID: depID,
+        },
+        success: function(result) {
+            if (result.status.name == "ok") {
+                
+                if (!result["data"][0]) {
+                    
+                    hasDependencies = false;
+                    
+                    
+                } else {
+                    
+                    hasDependencies = true;
+                    
+                    
+                }
+            }
+        }, error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
         }
     });
     
-    return response;
+    return hasDependencies;
 }
 
 function locationHasDependencies(locID) {
 
-    let locationName = getLocByID(locID);
-    let response = false;
-
-    allEntries["data"].forEach((entry) => {
-        if (entry["location"] == locationName) {
-            response = true;
+    let response;
+    $.ajax({            
+        url: "libs/php/getLocationDependencies.php",
+        type: "GET",
+        dataType: "json",
+        async: false,
+        data: {
+            locationID: locID,
+        },
+        success: function(result) {
+            if (result.status.name == "ok") {
+                if (!result["data"][0]) {
+                    response = false;
+                } else {
+                    response = true;
+                }
+            }
+        }, error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
         }
     });
-
+    
     return response;
 }
 
 
 
-
-
-
-function searchFilter(nameFilter, locationFilter, departmentFilter) {
-    let entriesToRemove = [];
-    visibleEntries.forEach((entry) => {
-        if ((!(entry["lastName"].toLowerCase().includes(nameFilter) || entry["firstName"].toLowerCase().includes(nameFilter))) || (!entry["location"].toLowerCase().includes(locationFilter)) || (!entry["department"].toLowerCase().includes(departmentFilter))) { 
-            entriesToRemove.push(entry);        //Adds a visible entry that doesn't include all search strings to a list of entries to be removed.
-        }
-    })
-    entriesToRemove.forEach((entry) => {                //Loop that removes all visible entries that should be removed.
-        let index = visibleEntries.indexOf(entry);  
-        visibleEntries.splice(index, 1);
-    })
-
-    allEntries["data"].forEach((entry) => {   //Makes entries that match all search criteria visible.
-        if ((entry["lastName"].toLowerCase().includes(nameFilter) || entry["firstName"].toLowerCase().includes(nameFilter)) && entry["location"].toLowerCase().includes(locationFilter) && entry["department"].toLowerCase().includes(departmentFilter)) {
-            if (!visibleEntries.includes(entry)) {
-                visibleEntries.push(entry);
-            }
-        }
-    })
-    
-    if (locationFilter == "" && departmentFilter != "") {
-        subtitleType = "department";
-    } else if (locationFilter != "" && departmentFilter == "") {
-        subtitleType = "location";
-    }
-
-    sortEntries();
-    updatePersonnelEntries();
-}
-
-
-
-function updatePage(direction) { //Updates page num variable, changes display of left page btn if needed, and changes displayed page number.
-    
-    if (direction == "right") {
-        
-        if (pageNumber <= (visibleEntries.length / 26)) { //Prevents page increasing to a page with no entries
-            pageNumber += 1;
-        }
-    } else if (direction =="left") {
-        pageNumber -= 1;
-        if (pageNumber < 1) {
-            pageNumber = 1;
-        }
-    }
-    if (pageNumber != 1) {
-        $("#pageLeftBtn").css("display", "inline-block");
-    } else {
-        $("#pageLeftBtn").css("display", "none");
-    }
-
-    $("#pageNumberDisplay").html("Page " + pageNumber);
-}
-
-function sortEntries() {
+function sortEntries(entries) {
     if (sortType == "name") {
-        visibleEntries.sort(function compare(entryOne, entryTwo) {
+        entries.sort(function compare(entryOne, entryTwo) {
             return entryOne["lastName"].localeCompare(entryTwo["lastName"]);
         });
-        updatePersonnelEntries();
+        
     } 
     else if (sortType =="location") {
-        visibleEntries.sort(function compare(entryOne, entryTwo) {
+        entries.sort(function compare(entryOne, entryTwo) {
             return entryOne["location"].localeCompare(entryTwo["location"]);
         });
-        updatePersonnelEntries();
+        
     }
     else if (sortType == "department") {
-        visibleEntries.sort(function compare(entryOne, entryTwo) {
+        entries.sort(function compare(entryOne, entryTwo) {
             return entryOne["department"].localeCompare(entryTwo["department"]);
         });
-        updatePersonnelEntries();
+        
     }
+    return entries;
 }
 
-$("#pageLeftBtn").on("click", (e) => {
-    updatePage("left");
-    updatePersonnelEntries();
-})
 
-$("#pageRightBtn").on("click", (e) => {
-    updatePage("right");
-    updatePersonnelEntries();
-})
 
 $("#nameFormat").on("change", (e) => {
     updatePersonnelEntries();
 })
 
 $("#sortBy").on("change", (e) => {
-    if ($("#sortBy").val() == "department") { //Ensures subtitle is changed to department when necessary
-        subtitleType = "department";
-    } else {
-        subtitleType = "location"
-    }
+    
     sortType = $("#sortBy").val();
-    sortEntries();
+    updatePersonnelEntries();
 })
-
-
-
-
 
 
 function updatePersonnelEntries() {
     $("#entryList").html("");
-    let format="firstLast";
+    let format = "firstLast";
     if ($("#nameFormat").val() == "lastFirst") {
         format = "lastFirst";
     }
-    for (let i=0; i < visibleEntries.length; i++) {
-        
-        if (subtitleType != "department") {
-            
-            if (format == "lastFirst") {
-                
-                $("#entryList").append("<li><a href='#employeePanel'><span id='name" + i + "' class='entryName'>" + visibleEntries[i]["lastName"] + ", " + visibleEntries[i]["firstName"] + "</span> <span class='entrySubtitle' id='loc" + i + "'>" + visibleEntries[i]["location"] +"</span></a></li>").listview();
-            } else {
-                $("#entryList").append("<li><a href='#employeePanel'><span id='name" + i + "' class='entryName'>" + visibleEntries[i]["firstName"] + " " + visibleEntries[i]["lastName"] + "</span> <span class='entrySubtitle' id='loc" + i + "'>" + visibleEntries[i]["location"] +"</span></a></li>");
-                
-            }
-        } 
-        else if (subtitleType == "department") {  //Puts the department as the entry subtitles if subtitleType == "department"
-            if (format == "lastFirst") {
-                $("#entryList").append("<li><a href='#employeePanel'><span id='name" + i + "' class='entryName'>" + visibleEntries[i]["lastName"] + ", " + visibleEntries[i]["firstName"] + "</span> <span class='entrySubtitle' id='loc" + i + "'>" + visibleEntries[i]["department"] +"</span></a></li>");
-            } else {
-                $("#entryList").append("<li><a href='#employeePanel'><span id='name" + i + "' class='entryName'>" + visibleEntries[i]["firstName"] + " " + visibleEntries[i]["lastName"] + "</span> <span class='entrySubtitle' id='loc" + i + "'>" + visibleEntries[i]["department"] +"</span></a></li>");
-            }
-        }
-
-    }
-    $("#entryList").listview("refresh");
-
-
-    if (clickEventsBound == false) {
-        
-        for (let i=0; i < visibleEntries.length; i++) {
-            
-            $("#name" + i).closest("li").on("click", (e) => {
-                
-                let targetNameID = $(e.target).closest("li").find("span").attr("id"); //returns nameID eg "name3" 
-                let index = parseInt(targetNameID.substring(4)); 
-                console.log(index);
-                $("#employeePanelName").html(visibleEntries[index]["firstName"] + " " + visibleEntries[index]["lastName"]);
-                $("#employeePanelLocation").html(visibleEntries[index]["location"]);
-                $("#employeePanelDepartment").html(visibleEntries[index]["department"]);
-                $("#employeePanelEmail").html(visibleEntries[index]["email"]);
-                $("#personnelID").html(visibleEntries[index]["id"]);
-                $("#newFName").attr("value", visibleEntries[index]["firstName"]);
-                $("#newLName").attr("value", visibleEntries[index]["lastName"]);
-                $("#newEmail").attr("value", visibleEntries[index]["email"]);
-                
-            })
-        }
-        clickEventsBound == true;
-    }
-    
-}
-
-
-
-
-$(document).ready( () => {  //On page load:  Need to add code that puts all deps and locs into arrays that feed into the html it needs to.
-    pageNumber = 1;
-    sortType = "name";
-    subtitleType = "location";
-    
-
-    $.ajax({            //AJAX call retrieving all records in format {department, email, firstName, jobTitle, lastName, location}.
-        url: "libs/php/getAll.php",
+    $.ajax({            
+        url: "libs/php/getPersonnelBySearch.php",
         type: "GET",
         dataType: "json",
         data: {
-            
+            nameSearchQuery: nameSearchQuery,
+            depSearchQuery: depSearchQuery,
+            locSearchQuery: locSearchQuery,
             
         },
         success: function(result) {
             
             if (result.status.name == "ok") {
-                console.log(result);
-                allEntries = result;
                 
-                allEntries["data"].forEach((entry) => {
-                    visibleEntries.push(entry);
+                let i=0;
+                result["data"] = sortEntries(result["data"]);
+
+                result["data"].forEach((entry) => { //Loops through filtered and sorted entries 
+                    let department;
+                    if (entry["department"].length > 14) {
+                        department = entry["department"].substring(0, 14) + "...";
+                        
+                    } else {
+                        department = entry["department"];
+                    }
+
+
+                    if (format == "lastFirst") {
+                        if (i%2 == 0) {
+                            $("#entryList").append("<li class='evenEntry' id='listItem" + i + "'><a href='#employeePanel'><span id='" + entry["id"] + "' class='entryName'>" + entry["lastName"] + ", " + entry["firstName"] + "</span><span class='leftSubtitle'>" + department + "</span><br> <span class='entrySubtitle' >" + entry["location"] +"</span></a></li>");
+                        } else {
+                            $("#entryList").append("<li class='oddEntry' id='listItem" + i + "'><a href='#employeePanel'><span id='" + entry["id"] + "' class='entryName'>" + entry["lastName"] + ", " + entry["firstName"] + "</span><span class='leftSubtitle'>" + department + "</span><br> <span class='entrySubtitle' >" + entry["location"] +"</span></a></li>");
+                        }
+                        
+                    } else {
+                        if (i%2 == 0) {
+                            $("#entryList").append("<li class='evenEntry' id='listItem" + i + "'><a href='#employeePanel'><span id='" + entry["id"] + "' class='entryName'>" + entry["firstName"] + " " + entry["lastName"] + "</span><span class='leftSubtitle'>" + department + "</span><br> <span class='entrySubtitle' >" + entry["location"] +"</span></a></li>");  
+                        } else {
+                            $("#entryList").append("<li class='oddEntry' id='listItem" + i + "'><a href='#employeePanel'><span id='" + entry["id"] + "' class='entryName'>" + entry["firstName"] + " " + entry["lastName"] + "</span><span class='leftSubtitle'>" + department + "</span><br> <span class='entrySubtitle' >" + entry["location"] +"</span></a></li>");
+                        }
+                        
+                    }
+                    
+                    i++;
                 })
-                
-                updatePersonnelEntries();
-   
+                $("#entryList").listview("refresh");
+
+                    for (let i=0; i<result["data"].length; i++) {
+                        
+                        $("#listItem" + i).on("click", (e) => {
+                            
+                            let personnelID = $(e.target).closest("li").find("span").attr("id"); //returns personnel ID  
+                            
+                            $.ajax({            
+                                url: "libs/php/getPersonnelByID.php",
+                                type: "GET",
+                                dataType: "json",
+                                data: {
+                                    personnelID: personnelID,
+                                    
+                                },
+                                success: function(result) {
+                                    
+                                    if (result.status.name == "ok") {
+                                        let specificEntry = result["data"][0];
+                                        $("#employeePanelName").html(specificEntry["firstName"] + " " + specificEntry["lastName"]);
+                                        $("#employeePanelName").attr("personnelID", personnelID);
+                                        $("#employeePanelLocation").html(specificEntry["location"]);
+                                        $("#employeePanelDepartment").html(specificEntry["department"]);
+                                        $("#employeePanelEmail").html(specificEntry["email"]);
+                                        $("#newFName").attr("value", specificEntry["firstName"]);
+                                        $("#newLName").attr("value", specificEntry["lastName"]);
+                                        $("#newEmail").attr("value", specificEntry["email"]);
+                                        $("#employeeInfo").listview("refresh");
+                                    }
+                                }
+                            })
+                              
+                        })
+                    }
+                   
             }
         }, error: function(jqXHR, textStatus, errorThrown) {
             console.log(errorThrown);
         }
     });
-    updatePage(1);
+}
 
+
+$(document).ready( () => { 
+
+    sortType = "name";
+    
+    updatePersonnelEntries();
+    
+});
+
+
+//Populates selects in configPanel with deps and locs via an ajax call when config panel is opened.
+$("#configPanel").on("panelopen", (e) => {
+    let departments = getAllDepartments();
+    let locations = getAllLocations();
+
+
+    let addDepartmentHTML = "";
+    departments.forEach((department) => {
+        currentHTML = "<option value=" + "'" + department["id"] + "'" + ">" +  department["name"] + "</option>";
+        addDepartmentHTML += currentHTML;
+    })
+    $("#addDepartmentID").html(addDepartmentHTML);
+    $("#addDepartmentID").selectmenu("refresh");
+    $("#chooseDep").html(addDepartmentHTML);
+    $("#chooseDep").selectmenu("refresh");
+    $("#chooseDepToDel").html(addDepartmentHTML);
+    $("#chooseDepToDel").selectmenu("refresh");
+
+
+    let addLocationHTML = "";
+    locations.forEach((location) => {
+        currentHTML = "<option value='" + location["id"] + "'>" + location["name"] + "</option>";
+        addLocationHTML += currentHTML;
+    })
+    $("#newLocID").html(addLocationHTML);
+    $("#newLocID").selectmenu("refresh");
+    $("#chooseLoc").html(addLocationHTML);
+    $("#chooseLoc").selectmenu("refresh");
+    $("#chooseLocToDel").html(addLocationHTML);
+    $("#chooseLocToDel").selectmenu("refresh");
+    $("#addDepChooseLoc").html(addLocationHTML);
+    $("#addDepChooseLoc").selectmenu("refresh");
+
+});
+
+//Populates selects in searchArea with deps and locs via ajax when searchAreaBtn clicked.
+$("#searchAreaBtn").on("click", (e) => {
+    let departments = getAllDepartments();
+    let locations = getAllLocations();
+
+    let addDepartmentHTML = "<option value='' selected='selected' >Any</option>";
+    departments.forEach((department) => {
+        currentHTML = "<option value=" + "'" + department["name"] + "'" + ">" +  department["name"] + "</option>";
+        addDepartmentHTML += currentHTML;
+    })
+    $("#chooseSearchDep").html(addDepartmentHTML);
+    $("#chooseSearchDep").selectmenu("refresh");
+
+    let addLocationHTML = "<option value='' selected='selected' >Any</option>";
+    locations.forEach((location) => {
+        currentHTML = "<option value='" + location["name"] + "'>" + location["name"] + "</option>";
+        addLocationHTML += currentHTML;
+    })
+    $("#chooseSearchLoc").html(addLocationHTML);
+    $("#chooseSearchLoc").selectmenu("refresh");
+})
+
+//Populates selects in employeePanel with deps via an ajax call when employeepanel is opened.
+$("#employeePanel").on("panelopen", (e) => {
+    let departments = getAllDepartments();
+    let locations = getAllLocations();
+
+
+    let addDepartmentHTML = "";
+    departments.forEach((department) => {
+        currentHTML = "<option value=" + "'" + department["id"] + "'" + ">" +  department["name"] + "</option>";
+        addDepartmentHTML += currentHTML;
+    })
+    $("#editPersonnelNewDep").html(addDepartmentHTML);
+    $("#editPersonnelNewDep").selectmenu("refresh");
+
+})
+
+
+
+function getAllDepartments() {  //Retreives all departments
+    let departments;
     $.ajax({
         url: "libs/php/getAllDepartments.php",
         type: "GET",
         dataType: "json",
         data: {
-
         },
+        async: false,
         success: function(result) {
             if (result.status.name == "ok") {
                 departments = result["data"];
                 
-                let addDepartmentHTML = "";
-                
-                for (let i=0; i < result["data"].length; i++) {
-                    currentHTML = "<option value=" + "'" + result["data"][i]["id"] + "'" + ">" +  result["data"][i]["name"] + "</option>";
-                    addDepartmentHTML += currentHTML;
-                }
-                
-                $("#addDepartmentID").html(addDepartmentHTML);
-                $("#addDepartmentID").selectmenu("refresh");
-                $("#chooseDep").html(addDepartmentHTML);
-                $("#chooseDep").selectmenu("refresh");
-                $("#chooseDepToDel").html(addDepartmentHTML);
-                $("#chooseDepToDel").selectmenu("refresh");
-                $("#newDepID").html(addDepartmentHTML);
-                $("#newDepID").selectmenu("refresh");
             }
-            
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(errorThrown);
         }
     })
+    return departments;
+}
 
+function getAllLocations() {  //Retreives all locations
+    let locations;
     $.ajax({
         url: "libs/php/getAllLocations.php",
         type: "GET",
@@ -344,39 +381,10 @@ $(document).ready( () => {  //On page load:  Need to add code that puts all deps
         data: {
 
         },
+        async: false,
         success: function(result) {
             if (result.status.name == "ok") {
-                
-                locations = result["data"];
-                
-                for (let i=0; i < 10; i++) {
-                    if (result["data"][i]) {
-                        $("#addDepartmentLoc" + i).attr("value", result["data"][i]["id"]);  //Fills is locations in choose location area.
-                        $("#addDepLabel" + i).html(result["data"][i]["name"]);
-                    } else {
-                        $("#addDepartmentLoc" + i).css("display", "none"); //Removes checkbox elements that will have no content.
-                        $("#addDepLabel" + i).css("display", "none");
-                    }
-                }
-                
-                
-                let addLocationHTML = "";
-                
-                for (let i=0; i < locations.length; i++) {
-                    currentHTML = "<option value=" + "'" + result["data"][i]["id"] + "'" + ">" + result["data"][i]["name"] + "</option>";
-                    addLocationHTML += currentHTML;
-                }
-                
-                $("#newLocID").html(addLocationHTML);
-                $("#newLocID").selectmenu("refresh");
-                $("#chooseLoc").html(addLocationHTML);
-                $("#chooseLoc").selectmenu("refresh");
-                $("#chooseLocToDel").html(addLocationHTML);
-                $("#chooseLocToDel").selectmenu("refresh");
-                
-
-
-
+                locations =  result["data"];
             }
             
         },
@@ -384,11 +392,8 @@ $(document).ready( () => {  //On page load:  Need to add code that puts all deps
             console.log(errorThrown);
         }
     })
-
-    
-});
-
-
+    return locations;
+}
 
 
 
@@ -400,7 +405,9 @@ $('#addDepartmentForm').submit(function(e){    //Runs insertDepartment.php when 
             url: 'libs/php/insertDepartment.php',
             type: 'post',
             data: $('#addDepartmentForm').serialize(),
+            dataType: "json",
             success:function(result){
+                
                 if (result["status"]["name"] == "ok") {
                     
                     location.reload();
@@ -492,7 +499,6 @@ $("#deleteDepartmentForm").submit(function(e) {
     
     if (departmentHasDependencies($("#chooseDepToDel").val())) {   //Prevents deletion if the department has dependencies.
         $("#deleteDepartmentFailAlert").html("Unable to delete: Department has dependencies");
-        
         return;
     }
 
@@ -504,10 +510,10 @@ $("#deleteDepartmentForm").submit(function(e) {
             id: $("#chooseDepToDel").val(),
         },
         success: function(result) {
-            console.log(result);
+            
             if (result["status"]["name"] == "ok") {
                 $("#deleteDepartmentFailAlert").html("");
-                location.reload();
+                location.reload(); 
             }
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -551,11 +557,11 @@ $("#editPersonnelForm").submit(function(e) {
         type: "get",
         dataType: "json",
         data: {
-            id: $("#personnelID").html(),
+            id: $("#employeePanelName").attr("personnelID"),
             newFName: $("#newFName").val(),
             newLName: $("#newLName").val(),
             newEmail: $("#newEmail").val(),
-            newDepID: $("#newDepID").val()
+            newDepID: $("#editPersonnelNewDep").val()
         },
         success: function(result) {
             
@@ -573,16 +579,16 @@ $("#editPersonnelForm").submit(function(e) {
 
 $("#deletePersonnelForm").submit(function(e) {
     e.preventDefault();
-    console.log($("#personnelID").html());
+    
     $.ajax({
         url: "libs/php/deletePersonnelByID.php",
         type: "get",
         dataType: "json",
         data: {
-            id: $("#personnelID").html()
+            id: $("#employeePanelName").attr("personnelID"),
         },
         success: function(result) {
-            console.log(result);
+            
             if (result["status"]["name"] == "ok") {
                 location.reload();
             }
